@@ -1,0 +1,5 @@
+BIBLIOGRAPHY
+
+http://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-first-application.html
+
+http://stackoverflow.com/questions/7161638/how-do-i-use-a-custom-serializer-with-jackson
