@@ -8,36 +8,36 @@ import java.util.List;
 /**
  * Object to hold incoming search specification.
  *
- * Sample JSON encoding"
+ * Sample JSON encoding:
  *
  * {“searchText”:[“Duis”, “Sed”, “Donec”, “Augue”, “Pellentesque”, “123”]}
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchList {
+public class SearchSpec {
 
-    private List<String> _searchText;
+    private List<String> _wordList;
 
     /**
      * Default constructor - create empty searchList so empty list is shown as {"searchText":[]}  rather than {}
      */
-    public SearchList() {
-        _searchText = new ArrayList<String>();
+    public SearchSpec() {
+        _wordList = new ArrayList<String>();
     }
 
     /**
      * Construct with list - probably only used within tests
-     * @param searchList
+     * @param wordList
      */
-    public SearchList(List<String> searchList) {
-        _searchText = searchList;
+    public SearchSpec(List<String> wordList) {
+        _wordList = wordList;
     }
 
-    public List<String> getSearchText() {
-        return _searchText;
+    public List<String> getWordList() {
+        return _wordList;
     }
 
-    public void setSearchText(List<String> searchText) {
-        _searchText = searchText;
+    public void setWordList(List<String> wordList) {
+        _wordList = wordList;
     }
 
 }

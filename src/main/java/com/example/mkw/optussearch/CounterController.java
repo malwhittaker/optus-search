@@ -27,16 +27,16 @@ public class CounterController {
     private WordSearchManager _wordSearchManager;
 
     @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
-    public ResponseEntity<SearchCountList> search(@RequestBody SearchList searchList) {
+    public ResponseEntity<WordCountList> search(@RequestBody SearchSpec searchSpec) {
 //        Map<String, Integer> map = new HashMap<String, Integer>();
 //        map.put("Duis", 11);
 //        map.put("Sed", 16);
-//        SearchCountList searchCountList = new SearchCountList(map);
-        SearchCountList searchCountList = new SearchCountList();
-        for (String word : searchList.getSearchText()) {
-            searchCountList.addItem(new SearchCountItem(word, _wordSearchManager.lookupCount(word)));
+//        WordCountList wordCountList = new WordCountList(map);
+        WordCountList wordCountList = new WordCountList();
+        for (String word : searchSpec.getWordList()) {
+            wordCountList.addItem(new WordCount(word, _wordSearchManager.lookupCount(word)));
         }
-        return new ResponseEntity<SearchCountList>(searchCountList, HttpStatus.OK);
+        return new ResponseEntity<WordCountList>(wordCountList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/analyze", method = RequestMethod.POST, consumes = "application/text; charset=UTF-8")

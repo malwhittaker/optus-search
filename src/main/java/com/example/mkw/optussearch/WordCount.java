@@ -9,13 +9,13 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
  * Requires custom serialization.
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonSerialize(using = SearchCountItemSerializer.class)
-public class SearchCountItem {
+@JsonSerialize(using = WordCountSerializer.class)
+public class WordCount {
 
     private String _word;
     private Integer _count;
 
-    public SearchCountItem(String word, Integer count) {
+    public WordCount(String word, Integer count) {
         _word = word;
         _count = count;
     }

@@ -1,1 +1,1 @@
-{"searchText":["Duis", "Sed", "Donec", "Augue", "Pellentesque", "123"]}
+{"wordList":["Duis", "Sed", "Donec", "Augue", "Pellentesque", "123"]}

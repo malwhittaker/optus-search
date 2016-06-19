@@ -18,29 +18,29 @@ import java.util.List;
  *
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchCountList {
+public class WordCountList {
 
-    private List<SearchCountItem> _itemList;
+    private List<WordCount> _itemList;
 
-    public SearchCountList() {
-        _itemList = new ArrayList<SearchCountItem>();
+    public WordCountList() {
+        _itemList = new ArrayList<WordCount>();
     }
 
-    public SearchCountList(List<SearchCountItem> itemList) {
+    public WordCountList(List<WordCount> itemList) {
         _itemList = itemList;
     }
 
     @JsonProperty("counts")
-    public List<SearchCountItem> getItemList() {
+    public List<WordCount> getItemList() {
         return _itemList;
     }
 
-    public void setItemList(List<SearchCountItem> requestList) {
+    public void setItemList(List<WordCount> requestList) {
         _itemList = requestList;
     }
 
-    public void addItem(SearchCountItem searchCountItem) {
-        _itemList.add(searchCountItem);
+    public void addItem(WordCount wordCount) {
+        _itemList.add(wordCount);
     }
 
 }
