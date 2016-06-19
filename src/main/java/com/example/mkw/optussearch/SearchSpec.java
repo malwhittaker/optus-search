@@ -7,13 +7,15 @@ import java.util.List;
 
 /**
  * Object to hold incoming search specification.
+ * Essentially it is a simple list of words with a wrapper to name the list "searchText".
  *
  * Sample JSON encoding:
  *
  * {“searchText”:[“Duis”, “Sed”, “Donec”, “Augue”, “Pellentesque”, “123”]}
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class SearchSpec {
+@SuppressWarnings("unused")
+class SearchSpec {
 
     private List<String> _wordList;
 
@@ -26,12 +28,17 @@ public class SearchSpec {
 
     /**
      * Construct with list - probably only used within tests
-     * @param wordList
+     *
+     * @param wordList This list of words to be searched.
      */
     public SearchSpec(List<String> wordList) {
         _wordList = wordList;
     }
 
+    /**
+     * Return the contained list of words
+     * @return
+     */
     public List<String> getWordList() {
         return _wordList;
     }

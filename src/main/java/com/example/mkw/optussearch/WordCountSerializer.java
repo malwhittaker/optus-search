@@ -7,12 +7,12 @@ import com.fasterxml.jackson.databind.SerializerProvider;
 import java.io.IOException;
 
 /**
- * Serializer to present the search response {@see WordCountList} in the specified format, as illustrated by the
- * following sample:
+ * Serializer to present the WordCount such that the search response {@see WordCountList} appears in the specified format,
+ * as illustrated by the following sample:
  *
  * {"counts": [{"Duis": 11}, {"Sed": 16}, {"Donec": 8}, {"Augue": 7}, {"Pellentesque": 6}, {"123": 0}]}
  */
-public class WordCountSerializer extends JsonSerializer<WordCount> {
+class WordCountSerializer extends JsonSerializer<WordCount> {
 
     @Override
     public void serialize(WordCount wordCount, JsonGenerator jgen, SerializerProvider provider) throws IOException {

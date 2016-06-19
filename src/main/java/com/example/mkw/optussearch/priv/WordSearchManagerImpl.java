@@ -21,7 +21,7 @@ import java.util.Scanner;
  * Analyzes given text, and then supports subsequent queries related to word frequency.
  */
 @Service
-public class WordSearchManagerImpl implements WordSearchManager {
+class WordSearchManagerImpl implements WordSearchManager {
 
     private static final Logger _logger = LoggerFactory.getLogger(WordSearchManagerImpl.class);
 
@@ -92,7 +92,7 @@ public class WordSearchManagerImpl implements WordSearchManager {
     }
 
     private List<WordCount> composeListByFrequency(Map<String,Integer> map) {
-        List list = new ArrayList<WordCount>();
+        List<WordCount> list = new ArrayList<WordCount>();
         for (String word : map.keySet()) {
             list.add(new WordCount(word, map.get(word)));
         }

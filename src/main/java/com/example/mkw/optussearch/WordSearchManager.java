@@ -1,7 +1,7 @@
 package com.example.mkw.optussearch;
 
 /**
- * Created by mal on 18/06/16. TODO XXX
+ * Define the interface for the underlying business logic related to the given spec
  */
 public interface WordSearchManager {
 

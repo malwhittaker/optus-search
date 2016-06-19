@@ -13,18 +13,17 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- * Created by mal on 18/06/16.
+ * Controller for "counter-api" endpoints.
  *
- Result in JSON:
- > {"counts": [{"Duis": 11}, {"Sed": 16}, {"Donec": 8}, {"Augue": 7}, {"Pellentesque": 6}, {"123": 0}]}
  */
 @RestController
 @EnableAutoConfiguration
 @RequestMapping("/counter-api")
 @ComponentScan
+@SuppressWarnings("unused")
 public class CounterController {
 
-    public static final String CSV_SEPARATOR = "|";
+    private static final String CSV_SEPARATOR = "|";
 
     @Autowired
     private WordSearchManager _wordSearchManager;

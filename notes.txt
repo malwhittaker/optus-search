@@ -1,5 +1,29 @@
+
+
+The service is built using:
+* spring-boot,
+* maven,
+* java 1.7
+
+The server is configured to use port 8080 by default and so are test scripts.
+
+ASSUMPTIONS
+
+1. For word counts case is insignificant (this seems to be confirmed by examples in spec).
+2. The server is given the text to be analyzed before the /search and /top requests are made.
+
+TEST SCRIPTS
+
+Several test scripts are present. These contain file references relative top the project root. To run analyze.sh use:
+
+bash scripts/analyze.sh
+
+
 BIBLIOGRAPHY
 
 http://docs.spring.io/spring-boot/docs/current/reference/html/getting-started-first-application.html
 
 http://stackoverflow.com/questions/7161638/how-do-i-use-a-custom-serializer-with-jackson
+
+http://www.sothawo.com/2015/07/build-a-spring-boot-rest-service-with-basic-authentication-for-several-users/
+

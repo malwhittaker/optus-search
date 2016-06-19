@@ -6,10 +6,11 @@ import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 /**
  * Holds elements of the the search result.
  *
- * Requires custom serialization.
+ * Requires custom serialization so that is it represented in JSON as {"word":count}
  */
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonSerialize(using = WordCountSerializer.class)
+@SuppressWarnings("unused")
 public class WordCount {
 
     private String _word;
