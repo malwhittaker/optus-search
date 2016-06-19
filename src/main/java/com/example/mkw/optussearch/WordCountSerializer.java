@@ -1,7 +1,6 @@
 package com.example.mkw.optussearch;
 
 import com.fasterxml.jackson.core.JsonGenerator;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonSerializer;
 import com.fasterxml.jackson.databind.SerializerProvider;
 
@@ -16,10 +15,8 @@ import java.io.IOException;
 public class WordCountSerializer extends JsonSerializer<WordCount> {
 
     @Override
-    public void serialize(WordCount wordCount, JsonGenerator jgen,
-                          SerializerProvider provider)
-            throws IOException, JsonProcessingException
-    {
+    public void serialize(WordCount wordCount, JsonGenerator jgen, SerializerProvider provider) throws IOException {
+
             jgen.writeStartObject();
             jgen.writeFieldName(wordCount.getWord());
             jgen.writeNumber(wordCount.getCount());

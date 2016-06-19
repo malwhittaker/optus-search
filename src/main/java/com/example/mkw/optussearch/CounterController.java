@@ -6,9 +6,11 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -36,6 +38,12 @@ public class CounterController {
         for (String word : searchSpec.getWordList()) {
             wordCountList.addItem(new WordCount(word, _wordSearchManager.lookupCount(word)));
         }
+        return new ResponseEntity<WordCountList>(wordCountList, HttpStatus.OK);
+    }
+
+    @RequestMapping(value = "/top/{number}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public ResponseEntity<WordCountList> mostFrequent(@PathVariable Integer number) {
+        WordCountList wordCountList = _wordSearchManager.lookupMostFrequentWords(number);
         return new ResponseEntity<WordCountList>(wordCountList, HttpStatus.OK);
     }
 

@@ -1,21 +1,17 @@
 package com.example.mkw.optussearch;
 
-import java.util.List;
-import java.util.Map;
-
 /**
- * Created by mal on 18/06/16.
+ * Created by mal on 18/06/16. TODO XXX
  */
 public interface WordSearchManager {
 
-    //Map<String,Integer> search(List<String> targetList);
-
     /**
-     * Return the
-     * @param number
-     * @return
+     * Return the most frequently occurring words in the analyzed text.
+     *
+     * @param count The number of words requested (eg 5 means, return top 5 words).
+     * @return List of most frequently occurring words and their counts.
      */
-    //Map<String,Integer> topResults(int number);
+    WordCountList lookupMostFrequentWords(Integer count);
 
     /**
      * Lookup the number of times a word has occurred in the analyzed text (case is not significant).
@@ -26,6 +22,11 @@ public interface WordSearchManager {
      */
     Integer lookupCount(String word);
 
+    /**
+     * Analyze the given text to support subsequent queries.
+     *
+     * @param content The text content to be analyzed.
+     */
     void analyze(String content);
 
 }
