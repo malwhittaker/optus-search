@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
@@ -33,10 +32,6 @@ public class CounterController {
     @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseEntity<WordCountList> search(@RequestBody SearchSpec searchSpec) {
 
-//        Map<String, Integer> map = new HashMap<String, Integer>();
-//        map.put("Duis", 11);
-//        map.put("Sed", 16);
-//        WordCountList wordCountList = new WordCountList(map);
         WordCountList wordCountList = new WordCountList();
         for (String word : searchSpec.getWordList()) {
             wordCountList.addItem(new WordCount(word, _wordSearchManager.lookupCount(word)));
@@ -45,21 +40,21 @@ public class CounterController {
     }
 
     @RequestMapping(value = "/top/{number}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+    public ResponseEntity<WordCountList> findMostFrequentAsJson(@PathVariable Integer number) {
 
-    public ResponseEntity<WordCountList> mostFrequent(@PathVariable Integer number) {
         WordCountList wordCountList = _wordSearchManager.lookupMostFrequentWords(number);
         return new ResponseEntity<WordCountList>(wordCountList, HttpStatus.OK);
     }
 
     @RequestMapping(value = "/top/{number}", method = RequestMethod.GET, produces = "text/csv; charset=UTF-8")
-    public ResponseEntity<String> mostFrequentCsv(@PathVariable Integer number) {
+    public ResponseEntity<String> findMostFrequentAsCsv(@PathVariable Integer number) {
 
         WordCountList wordCountList = _wordSearchManager.lookupMostFrequentWords(number);
-        String textList = formatListInTextForm(wordCountList);
+        String textList = formatListAsCsv(wordCountList);
         return new ResponseEntity<String>(textList, HttpStatus.OK);
     }
 
-    @RequestMapping(value = "/analyze", method = RequestMethod.POST, consumes = "application/text; charset=UTF-8")
+    @RequestMapping(value = "/analyze", method = RequestMethod.POST, consumes = "text/plain; charset=UTF-8")
     public void analyze(@RequestBody String content) {
 
         _wordSearchManager.analyze(content);
@@ -72,7 +67,7 @@ public class CounterController {
 
     //------------------------------------- Private methods ------------------------------------------------------
 
-    private static String formatListInTextForm(WordCountList wordCountList) {
+    private static String formatListAsCsv(WordCountList wordCountList) {
 
         StringBuilder buffer = new StringBuilder();
         for (WordCount wordCount : wordCountList.getItemList()) {
