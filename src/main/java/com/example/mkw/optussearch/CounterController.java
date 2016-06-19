@@ -25,11 +25,14 @@ import org.springframework.web.bind.annotation.RestController;
 @ComponentScan
 public class CounterController {
 
+    public static final String CSV_SEPARATOR = "|";
+
     @Autowired
     private WordSearchManager _wordSearchManager;
 
     @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
     public ResponseEntity<WordCountList> search(@RequestBody SearchSpec searchSpec) {
+
 //        Map<String, Integer> map = new HashMap<String, Integer>();
 //        map.put("Duis", 11);
 //        map.put("Sed", 16);
@@ -42,18 +45,42 @@ public class CounterController {
     }
 
     @RequestMapping(value = "/top/{number}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
+
     public ResponseEntity<WordCountList> mostFrequent(@PathVariable Integer number) {
         WordCountList wordCountList = _wordSearchManager.lookupMostFrequentWords(number);
         return new ResponseEntity<WordCountList>(wordCountList, HttpStatus.OK);
     }
 
+    @RequestMapping(value = "/top/{number}", method = RequestMethod.GET, produces = "text/csv; charset=UTF-8")
+    public ResponseEntity<String> mostFrequentCsv(@PathVariable Integer number) {
+
+        WordCountList wordCountList = _wordSearchManager.lookupMostFrequentWords(number);
+        String textList = formatListInTextForm(wordCountList);
+        return new ResponseEntity<String>(textList, HttpStatus.OK);
+    }
+
     @RequestMapping(value = "/analyze", method = RequestMethod.POST, consumes = "application/text; charset=UTF-8")
     public void analyze(@RequestBody String content) {
+
         _wordSearchManager.analyze(content);
     }
 
     public static void main(String[] args) throws Exception {
+
         SpringApplication.run(CounterController.class, args);
     }
 
+    //------------------------------------- Private methods ------------------------------------------------------
+
+    private static String formatListInTextForm(WordCountList wordCountList) {
+
+        StringBuilder buffer = new StringBuilder();
+        for (WordCount wordCount : wordCountList.getItemList()) {
+            buffer.append(wordCount.getWord());
+            buffer.append(CSV_SEPARATOR);
+            buffer.append(wordCount.getCount());
+            buffer.append("\n");
+        }
+        return buffer.toString();
+    }
 }
