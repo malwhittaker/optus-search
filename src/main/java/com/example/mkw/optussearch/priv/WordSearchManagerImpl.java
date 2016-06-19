@@ -3,16 +3,16 @@ package com.example.mkw.optussearch.priv;
 import com.example.mkw.optussearch.WordSearchManager;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Scanner;
 
 /**
- * Created by mal on 18/06/16.
+ * Implementation of the WordSearchManager.
+ *
+ * Analyzes given text, and then supports subsequent queries related to word frequency.
  */
 @Service
 public class WordSearchManagerImpl implements WordSearchManager {
@@ -22,27 +22,24 @@ public class WordSearchManagerImpl implements WordSearchManager {
     private Map<String,Integer> _wordCountMap;
 
     @Override
-    public Map<String, Integer> search(List<String> targetList) {
+    public Integer lookupCount(String word) {
+
         if (_wordCountMap == null) {
             throw new RuntimeException("No content provided.");
         }
 
-        Map<String,Integer> map = new HashMap<String, Integer>();
-        for (String target : targetList) {
-            Integer count = _wordCountMap.get(target.toLowerCase());
-            if (count == null) {
-                count = 0;
-            }
-            // Use requested word in response (may be mixed case), rather than word from map (always lowercase) - I don't like this, but it matches given tests
-            map.put(target, count);
+        Integer count = _wordCountMap.get(word.toLowerCase());
+        if (count == null) {
+            count = 0;
         }
-        return map;
+        return count;
     }
 
     @Override
     public void analyze(String content) {
+
         Scanner scanner = new Scanner(content);
-        scanner.useDelimiter("[\\s.,]+");// Treat multiple consecutive delimeters as one
+        scanner.useDelimiter("[\\s.,]+");// Treat multiple consecutive delimiters as one
 
         Map<String,Integer> map = new HashMap<String, Integer>();
 
@@ -54,7 +51,10 @@ public class WordSearchManagerImpl implements WordSearchManager {
         _wordCountMap = map;
     }
 
+    // ---------------------------------------- Private methods ------------------------------------------------------
+
     private void addWordToMap(Map<String,Integer> map, String word) {
+
         Integer count = map.get(word);
         if (count == null) {
             count = 1;

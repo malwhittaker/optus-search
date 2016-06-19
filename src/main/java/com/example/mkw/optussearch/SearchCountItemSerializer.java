@@ -14,26 +14,16 @@ import java.util.Map;
  *
  * {"counts": [{"Duis": 11}, {"Sed": 16}, {"Donec": 8}, {"Augue": 7}, {"Pellentesque": 6}, {"123": 0}]}
  */
-public class SearchCountListSerializer extends JsonSerializer<SearchCountList> { // TODO - no longer required
+public class SearchCountItemSerializer extends JsonSerializer<SearchCountItem> {
 
     @Override
-    public void serialize(SearchCountList searchCountList, JsonGenerator jgen,
+    public void serialize(SearchCountItem searchCountItem, JsonGenerator jgen,
                           SerializerProvider provider)
             throws IOException, JsonProcessingException
     {
-//        Map<String,Integer> contentMap = searchCountList.getContentMap();
-//
-//        jgen.writeStartObject();
-//        jgen.writeFieldName("counts");
-//        jgen.writeStartArray();
-//        for (String key : searchCountList.getRequestList()) {
-//            jgen.writeStartObject();
-//            jgen.writeFieldName(key);
-//            jgen.writeNumber(contentMap.get(key));
-//            jgen.writeEndObject();
-//        }
-//        jgen.writeEndArray();
-//        jgen.writeEndObject();
+            jgen.writeStartObject();
+            jgen.writeFieldName(searchCountItem.getWord());
+            jgen.writeNumber(searchCountItem.getCount());
+            jgen.writeEndObject();
     }
 }
-

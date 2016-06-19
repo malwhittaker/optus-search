@@ -75,8 +75,9 @@ public class WordSearchManagerImplTest {
     @Test
     public void testSearch() {
         _logger.debug("testSearch(): enter");
-        Map<String,Integer> searchResult = _wordSearchManager.search(_searchTargets);
-        _logger.debug("testSearch(): mid, result={}", searchResult);
-        assertEquals("Result must be as expected", _expectedSearchResults, searchResult);
+        for (String word : _searchTargets) {
+            Integer count = _wordSearchManager.lookupCount(word);
+            assertEquals("Result must be as expected for " + word, _expectedSearchResults.get(word), count);
+        }
     }
 }

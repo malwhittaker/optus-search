@@ -11,8 +11,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.Map;
-
 /**
  * Created by mal on 18/06/16.
  *
@@ -34,8 +32,10 @@ public class CounterController {
 //        map.put("Duis", 11);
 //        map.put("Sed", 16);
 //        SearchCountList searchCountList = new SearchCountList(map);
-        Map<String,Integer> searchResult = _wordSearchManager.search(searchList.getSearchText());
-        SearchCountList searchCountList = new SearchCountList(searchList.getSearchText(), searchResult);
+        SearchCountList searchCountList = new SearchCountList();
+        for (String word : searchList.getSearchText()) {
+            searchCountList.addItem(new SearchCountItem(word, _wordSearchManager.lookupCount(word)));
+        }
         return new ResponseEntity<SearchCountList>(searchCountList, HttpStatus.OK);
     }
 

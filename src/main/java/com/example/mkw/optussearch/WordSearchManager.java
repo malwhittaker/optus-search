@@ -8,16 +8,23 @@ import java.util.Map;
  */
 public interface WordSearchManager {
 
-    Map<String,Integer> search(List<String> targetList);
+    //Map<String,Integer> search(List<String> targetList);
 
     /**
      * Return the
      * @param number
      * @return
      */
-    Map<String,Integer> topResults(int number);
+    //Map<String,Integer> topResults(int number);
 
-    //Integer search(String target);
+    /**
+     * Lookup the number of times a word has occurred in the analyzed text (case is not significant).
+     * If the given word is not present, return 0.
+     *
+     * @param word Target for lookup.
+     * @return number of time word found in analyzed text.
+     */
+    Integer lookupCount(String word);
 
     void analyze(String content);
 
