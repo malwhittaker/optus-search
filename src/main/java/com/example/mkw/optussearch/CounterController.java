@@ -6,6 +6,7 @@ import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -15,6 +16,12 @@ import org.springframework.web.bind.annotation.RestController;
 /**
  * Controller for "counter-api" endpoints.
  *
+ * Required:
+ * POST /counter-api/search     Accepts list of words and responds with word+count list from analyzed text.
+ * GET  /counter-api/top/{n}    Shows top n words from analyzed text.
+ *
+ * Additional:
+ * POST /counter-api/analyze    Endpoint to load text for subsequent search and top queries.
  */
 @RestController
 @EnableAutoConfiguration
@@ -29,14 +36,19 @@ public class CounterController {
     private WordSearchManager _wordSearchManager;
 
     @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8", produces = "application/json; charset=UTF-8")
-    public ResponseEntity<WordCountList> search(@RequestBody SearchSpec searchSpec) {
+    public ResponseEntity<WordCountList> searchAsJson(@RequestBody SearchSpec searchSpec) {
 
-        WordCountList wordCountList = new WordCountList();
-        for (String word : searchSpec.getWordList()) {
-            wordCountList.addItem(new WordCount(word, _wordSearchManager.lookupCount(word)));
-        }
+        WordCountList wordCountList = composeWordCountList(searchSpec);
         return new ResponseEntity<WordCountList>(wordCountList, HttpStatus.OK);
     }
+
+    @RequestMapping(value = "/search", method = RequestMethod.POST, consumes = "application/json; charset=UTF-8", produces = "text/csv; charset=UTF-8")
+    public ResponseEntity<String> searchAsCsv(@RequestBody SearchSpec searchSpec) {
+
+        String textList = formatListAsCsv(composeWordCountList(searchSpec));
+        return new ResponseEntity<String>(textList, HttpStatus.OK);
+    }
+
 
     @RequestMapping(value = "/top/{number}", method = RequestMethod.GET, produces = "application/json; charset=UTF-8")
     public ResponseEntity<WordCountList> findMostFrequentAsJson(@PathVariable Integer number) {
@@ -59,15 +71,43 @@ public class CounterController {
         _wordSearchManager.analyze(content);
     }
 
-    public static void main(String[] args) throws Exception {
+   //-------------------------------------Exception Handling ------------------------------------------------------
 
+   /**
+     * Simplistic exception handler to just return text of exception message.
+     *
+     * @param e
+     * @return
+     */
+    @ExceptionHandler(value = RuntimeException.class)
+    public String RuntimeException(RuntimeException e){
+        return e.getMessage();
+    }
+
+    //------------------------------------- Application main ------------------------------------------------------
+
+    // TODO - extract to separate configuration class
+    public static void main(String[] args) throws Exception {
         SpringApplication.run(CounterController.class, args);
     }
 
     //------------------------------------- Private methods ------------------------------------------------------
 
-    private static String formatListAsCsv(WordCountList wordCountList) {
+    /**
+     * Compose word count list from given search spec by making multiple (lightweight) calls to manager.
+     *
+     * @param searchSpec  Contains list of words.
+     * @return WordCountList containing specified words and their counts.
+     */
+    private WordCountList composeWordCountList(SearchSpec searchSpec) {
+        WordCountList wordCountList = new WordCountList();
+        for (String word : searchSpec.getWordList()) {
+            wordCountList.addItem(new WordCount(word, _wordSearchManager.lookupCount(word)));
+        }
+        return wordCountList;
+    }
 
+    private static String formatListAsCsv(WordCountList wordCountList) {
         StringBuilder buffer = new StringBuilder();
         for (WordCount wordCount : wordCountList.getItemList()) {
             buffer.append(wordCount.getWord());

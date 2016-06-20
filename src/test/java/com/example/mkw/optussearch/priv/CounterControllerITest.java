@@ -32,25 +32,33 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+/**
+ * Controller tests.
+ * TODO - Consider JSON path for more flexible interrogation of JSON results (rather than string comparison)
+ */
 @RunWith(SpringJUnit4ClassRunner.class)
 @SpringApplicationConfiguration(CounterController.class)
 @WebIntegrationTest
 @SuppressWarnings("unused")
-public class CounterControllerIT {
+public class CounterControllerITest {
 
-    private static final Logger _logger = LoggerFactory.getLogger(CounterControllerIT.class);
+    private static final Logger _logger = LoggerFactory.getLogger(CounterControllerITest.class);
 
+    // Test users
     private static final String USER_0 = "mal";
     private static final String PASSWORD_0 = "secret";
-
     private static final String USER_1 = "optus";
     private static final String PASSWORD_1 = "candidates";
 
     // Test values
-    private static final String SEARCH_SPEC_1 = "{\"wordList\":[\"Duis\", \"Sed\", \"Donec\", \"Augue\", \"Pellentesque\", \"123\"]}";
-    private static final String SEARCH_RESULT_1 = "{\"counts\":[{\"Duis\":11},{\"Sed\":16},{\"Donec\":8},{\"Augue\":7},{\"Pellentesque\":6},{\"123\":0}]}";
+    private static final String SEARCH_SPEC_JSON = "{\"wordList\":[\"Duis\", \"Sed\", \"Donec\", \"Augue\", \"Pellentesque\", \"123\"]}";
+    private static final String SEARCH_RESULT_JSON = "{\"counts\":[{\"Duis\":11},{\"Sed\":16},{\"Donec\":8},{\"Augue\":7},{\"Pellentesque\":6},{\"123\":0}]}";
+    private static final String SEARCH_RESULT_TEXT = "Duis|11\nSed|16\nDonec|8\nAugue|7\nPellentesque|6\n123|0\n";
     private static final String TOP_5_RESULT_JSON = "{\"counts\":[{\"eget\":17},{\"vel\":17},{\"sed\":16},{\"in\":15},{\"et\":14}]}";
     private static final String TOP_5_RESULT_TEXT = "eget|17\nvel|17\nsed|16\nin|15\net|14\n";
+
+
+    // ------------------------------------- Test setup ---------------------------------------------------------------
 
     @InjectMocks
     CounterController controller;
@@ -84,24 +92,39 @@ public class CounterControllerIT {
     public void testUnauthorizedRequestRejected() throws Exception {
 
         mvc.perform(post("/counter-api/search")
-                .content(SEARCH_SPEC_1)
+                .content(SEARCH_SPEC_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isUnauthorized());
     }
 
     @Test
-    public void testSearch() throws Exception {
+    public void testSearchAsJson() throws Exception {
 
         MvcResult result = mvc.perform(post("/counter-api/search")
                 .header(HttpHeaders.AUTHORIZATION, generateAuthHeader(USER_1, PASSWORD_1))
-                .content(SEARCH_SPEC_1)
+                .content(SEARCH_SPEC_JSON)
                 .contentType(MediaType.APPLICATION_JSON)
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andReturn();
 
-        assertEquals(SEARCH_RESULT_1, result.getResponse().getContentAsString());
+        assertEquals(SEARCH_RESULT_JSON, result.getResponse().getContentAsString());
+
+    }
+
+    @Test
+    public void testSearchAsText() throws Exception {
+
+        MvcResult result = mvc.perform(post("/counter-api/search")
+                .header(HttpHeaders.AUTHORIZATION, generateAuthHeader(USER_1, PASSWORD_1))
+                .content(SEARCH_SPEC_JSON)
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept("text/csv"))
+                .andExpect(status().isOk())
+                .andReturn();
+
+        assertEquals(SEARCH_RESULT_TEXT, result.getResponse().getContentAsString());
 
     }
 
